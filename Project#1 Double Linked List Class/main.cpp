@@ -28,5 +28,11 @@ int main() {
 	myList.InsertAtEnd(0);
 	myList.Print();
 
+	cout << "Deleting the 4 from the linked list" << endl;
+	clsDblLinkedList<float>::Node* N2 = myList.Find(4);
+	myList.DeleteNode(N2);
+	myList.Print();
+
+
 	return 0;
 }

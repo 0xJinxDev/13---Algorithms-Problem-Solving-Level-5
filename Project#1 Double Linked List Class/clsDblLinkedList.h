@@ -97,7 +97,62 @@ public:
 
 		OriginalNode->Next = newNode;
 
+	}
 
+	void DeleteNode(Node* NodeToDelete) {
+
+		if (!Head || !NodeToDelete)
+			return;
+
+		if (Head == NodeToDelete) {
+
+			Head = Head->Next;
+
+			if (Head)
+				Head->Previous = nullptr;
+		}
+		else {
+
+			NodeToDelete->Previous->Next = NodeToDelete->Next;
+
+			if (NodeToDelete->Next)
+				NodeToDelete->Next->Previous = NodeToDelete->Previous;
+		}
+
+		delete NodeToDelete;
+	}
+
+	void DeleteFirstNode() {
+
+		if (!Head)
+			return;
+
+		Node* temp = Head;
+		Head = Head->Next;
 		
+		if (Head)
+			Head->Previous = nullptr;
+
+		delete temp;
+	}
+
+	void DeleteLastNode() {
+		if (!Head)
+			return;
+
+		if (!Head->Next) {
+			delete Head;
+			Head = nullptr;
+			return;
+		}
+
+		Node* temp = Head;
+
+		while (temp->Next) {
+			temp = temp->Next;
+		}
+
+		temp->Previous->Next = nullptr;
+		delete temp;
 	}
 };
