@@ -7,7 +7,10 @@ using namespace std;
 template <class T>
 class clsDblLinkedList {
 
+private:
+	int _Size = 0;
 
+	
 public:
 	class Node {
 	public:
@@ -22,11 +25,11 @@ public:
 	Node* Head = nullptr;
 
 	~clsDblLinkedList() {
-		Node* Current = Head;
-		while (Current) {
-			Node* Next = Current->Next;
-			delete Current;
-			Current = Next;
+		Node* temp = nullptr;
+		while (Head) {
+			temp = Head;
+			Head = Head->Next;
+			delete temp;
 		}
 	}
 
@@ -59,6 +62,7 @@ public:
 		}
 		newNode->Next = Head;
 		Head = newNode;
+		_Size++;
 	}
 
 	void InsertAtEnd(T value) {
@@ -66,6 +70,7 @@ public:
 
 		if (!Head) {
 			Head = newNode;
+			_Size++;
 			return;
 		}
 
@@ -77,15 +82,17 @@ public:
 
 		Current->Next = newNode;
 		newNode->Previous = Current;
+		_Size++;
 	}
 	
 	void InsertAfter(Node* OriginalNode, T value) {
 		
-		Node* newNode = new Node(value);
+	
 		
 		if (!OriginalNode)
 			return;
 
+		Node* newNode = new Node(value);
 
 		newNode->Previous = OriginalNode;
 		newNode->Next = OriginalNode->Next;
@@ -96,7 +103,7 @@ public:
 		}
 
 		OriginalNode->Next = newNode;
-
+		_Size++;
 	}
 
 	void DeleteNode(Node* NodeToDelete) {
@@ -118,7 +125,7 @@ public:
 			if (NodeToDelete->Next)
 				NodeToDelete->Next->Previous = NodeToDelete->Previous;
 		}
-
+		_Size--;
 		delete NodeToDelete;
 	}
 
@@ -132,10 +139,59 @@ public:
 		
 		if (Head)
 			Head->Previous = nullptr;
-
+		_Size--;
 		delete temp;
 	}
 
+	void Reverse() {
+
+		Node* Current = Head;
+		Node* temp = nullptr;
+
+		while (Current) {
+			temp = Current->Previous;
+			Current->Previous = Current->Next;
+			Current->Next = temp;
+			Head = Current;
+			Current = Current->Previous;
+
+		}
+
+	}
+
+	Node* GetNode(int index) {
+
+		if (index > _Size - 1 || index <0) {
+			return nullptr;
+		}
+	
+		Node* temp = Head;
+		
+		for (int i = 0; i < index; i++) {
+			temp = temp->Next;
+		}
+		return temp;
+	}
+
+	T getItem(int index) {
+
+		Node* ItemNode = GetNode(index);
+
+		return ItemNode ? ItemNode->value : T();
+	}
+
+	bool UpdateItem(int index, T value) {
+
+		Node* ItemNode = GetNode(index);
+		
+		return ItemNode ? (ItemNode->value = value, true) : false;
+
+	}
+	  
+	int Size() {
+
+		return _Size;
+	}
 	void DeleteLastNode() {
 		if (!Head)
 			return;
@@ -143,6 +199,7 @@ public:
 		if (!Head->Next) {
 			delete Head;
 			Head = nullptr;
+			_Size--;
 			return;
 		}
 
@@ -154,5 +211,18 @@ public:
 
 		temp->Previous->Next = nullptr;
 		delete temp;
+		_Size--;
+	}
+	void clear() {
+		Node* temp = nullptr;
+		while (Head) {
+			temp = Head;
+			Head = Head->Next;
+			delete temp;
+		}
+		_Size = 0;
+	}
+	bool isEmpty() {
+		return (!Head);
 	}
 };
